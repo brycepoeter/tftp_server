@@ -46,7 +46,7 @@ less than 512 bytes is an indication that the transfer has been completed.
 This server takes two arguments from command line, the first being port number and 
 the second being timeout in milliseconds. The port number is the port on which the 
 server will listen for incoming transmissions. When a RRQ/WRQ comes in, the server 
-will handle the RRQ/WRQ on a new port between 4000 and 8000 and continue listening 
+will handle the RRQ/WRQ on a new port between 1024 and 65535 and continue listening 
 for new requests on the port the user specified. The timeout is the time in milliseconds 
 the server will wait for a response before retransmitting the last DATA/ACK it sent. 
 
@@ -66,24 +66,10 @@ tftp> verbose
 tftp> get sample.txt destination.txt / put sample.txt  
 
 
-#### Testing 
-
-You can test the server's performance using the included .jar file. Placing this 
-in between your client and this server will allow you to test performance with a 
-certain amount of dropped packets. 
-
-Sample usage of test server: 
-
-$ java -jar udpproxy.jar (port) (tftp-server-IP) (tftp-port) (packet-drop-rate)   
-(e.g. $ java -jar udpproxy.jar 8080 SERVER-IP 8001 0.1)
-
-Once that is established, point TFTP client at (port) and run the command. 
-
 #### Acknowledgements 
 
 This project was completed as part of Dave Sahota's Networks Winter 2021 class 
 in the MPCS at the University of Chicago. While the Python code here is all mine, it 
 is underpinned by Dave's instruction, and he provided the resources linked
-above, the .jar file for testing, and the specific commands for using the tftp 
-command-line client. 
+above and the specific commands for using the tftp command-line client. 
 
