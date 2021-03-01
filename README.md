@@ -26,9 +26,7 @@ expecting the counterpart in exchange from the client. So if the client sends
 a RRQ, the server will be sending DATA and expecting ACKs. And vice versa. 
 
 Note: I have used the word "packet" throughout the code, but please be aware that 
-UDP sends datagrams, not packets. The underlying Network protocol, IP, does send 
-packets. If at any point I appear to imply that UDP sends packets, please keep 
-this in mind. 
+UDP sends datagrams, not packets. 
 
 Once a DATA datagram is sent, an ACK with the same block number is expected. 
 The next DATA will not be sent until the ACK for the previous piece has been received. 
