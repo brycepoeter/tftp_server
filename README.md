@@ -1,26 +1,23 @@
-Trivial File Transfer Protocol (TFTP) Server
-
-
-Lightweight Read/Write over UDP/IP
+# Trivial File Transfer Protocol (TFTP) Server 
+### Lightweight Read/Write over UDP/IP 
 
 This is a basic TFTP server following the protocol codified in 
-RFC1350 for 
+[RFC1350](https://tools.ietf.org/html/rfc1350) for 
 use with devices with limited memory capacity.  
 
 It's hard to imagine now, but back in the day, storage constraints 
-on small devices could be such that software – and the protocols it 
-lays out – had to be pared down to fit on the device. As such, 
+on small devices could be such that software – and the protocols it 
+lays out – had to be pared down to fit on the device. As such, 
 there needed to be a bare-bones file-transfer protocol, one that was 
 as small as could reasonably work, for instances when complicated 
 transfer protocols involving large files and many sub-behaviors 
 would not work in the circumstances. Enter TFTP! 
 
-
-Basic Overview of TFTP
+#### Basic Overview of TFTP 
 
 I recommend reading the RFC, which is the definitive source of TFTP 
 protocols and operations. It's not too long, about 10 pages. I also 
-highly recommend reviewing the TCP/IP Guide to TFTP put out by Charles M. Kozierok. 
+highly recommend reviewing the [TCP/IP Guide to TFTP](http://www.tcpipguide.com/free/t_TrivialFileTransferProtocolTFTP.htm) put out by Charles M. Kozierok. 
 Whatever questions you have after reviewing the RFC will likely be answered there.  
 
 In essence, the TFTP server listens for a read/write request (RRQ/WRQ), 
@@ -38,32 +35,55 @@ The next DATA will not be sent until the ACK for the previous piece has been rec
 
 For instance, if DATA 2 is received, ACK 2 is sent. If DATA 2 is received again, that means 
 ACK 2 was not received by client. ACK 2 is re-transmitted. If DATA 3 is received, the ACK 2
-retransmission was received. ACK 3 is sent, and DATA 4 is expected. And so forth until the transaction either times out or is completed.  
+retransmission was received. ACK 3 is sent, and DATA 4 is expected. And so forth until 
+the transaction either times out or is completed.  
 
-Data is sent in 512-byte increments with a 4-byte header. The first time a data field is less than 512 bytes is an indication that the transfer has been completed. 
+Data is sent in 512-byte increments with a 4-byte header. The first time a data field is 
+less than 512 bytes is an indication that the transfer has been completed. 
 
-
-Using this Server
+#### Using this Server
 
 This server takes two arguments from command line, the first being port number and 
 the second being timeout in milliseconds. The port number is the port on which the 
 server will listen for incoming transmissions. When a RRQ/WRQ comes in, the server 
-will handle the RRQ/WRQ on a new port between 1024 and 65535 and continue listening 
-for new requests on the port the user specified. The timeout is the time in milliseconds the server will wait for a response before retransmitting the last DATA/ACK it sent. 
+will handle the RRQ/WRQ on a new port between 4000 and 8000 and continue listening 
+for new requests on the port the user specified. The timeout is the time in milliseconds 
+the server will wait for a response before retransmitting the last DATA/ACK it sent. 
 
 Sample usage: 
 
+
 $ python tftp_server.py (port) (timeout)  
+
 
 You can test the server using a tftp client in Terminal. Sample command sequence: 
 
-$ tftp
-tftp> connect (server IP) (server port)
-tftp> binary
-tftp> verbose
+
+$ tftp  
+tftp> connect (server IP) (server port)     
+tftp> binary   
+tftp> verbose  
 tftp> get sample.txt destination.txt / put sample.txt  
 
 
-Acknowledgements
+#### Testing 
 
-I wrote this code as part of Dave Sahota's Networks Winter 2021 class in the MPCS at the University of Chicago. While the code here is all mine, it is underpinned by Dave's instruction, and he provided the specific commands for using the tftp command-line client.
+You can test the server's performance using the included .jar file. Placing this 
+in between your client and this server will allow you to test performance with a 
+certain amount of dropped packets. 
+
+Sample usage of test server: 
+
+$ java -jar udpproxy.jar (port) (tftp-server-IP) (tftp-port) (packet-drop-rate)   
+(e.g. $ java -jar udpproxy.jar 8080 SERVER-IP 8001 0.1)
+
+Once that is established, point TFTP client at (port) and run the command. 
+
+#### Acknowledgements 
+
+This project was completed as part of Dave Sahota's Networks Winter 2021 class 
+in the MPCS at the University of Chicago. While the Python code here is all mine, it 
+is underpinned by Dave's instruction, and he provided the resources linked
+above, the .jar file for testing, and the specific commands for using the tftp 
+command-line client. 
+
